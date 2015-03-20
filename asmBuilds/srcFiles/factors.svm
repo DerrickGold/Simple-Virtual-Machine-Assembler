@@ -1,0 +1,92 @@
+        JMP start       # A simple minded program finding all factors of
+        JMP start       # a number up 2^15-1.
+        JMP start       # Input to be placed as DATA at label input.
+        JMP start       # P. Rudnicki, November 4, 1998
+        JMP start       #
+start   LOAD A1,input   
+        LOADI R1,A1
+        JMPZ zero
+        JMPN negat
+        JMP pr_head
+begin   LOAD A1,input 
+        LOADI R1,A1
+        LOAD A2,fact  
+        LOADI R2,A2     
+        JMP contin      # check whether R2 is a factor of input
+contin  SUBR R1,R2
+        JMPN incfact    # try next factor 
+        JMPZ newfact    # new factor found
+        LOAD A1,fact
+        LOADI R1,A1
+        ADDR R2,R1
+        JMPO incfact    # 
+        LOAD A1,input
+        LOADI R1,A1
+        JMP contin
+newfact LOAD A2,fact    # new factor found, print it
+        LOADI R2,A2
+        OUTR R2
+        OUTC 32
+incfact LOAD A2,fact     # increment factor by 1 and try it
+        LOADI R2,A2
+        ADD R2,1
+        JMPO end         # new factor too big, we are done
+        STOREI R2,A2
+        LOAD A1,input
+        LOADI R1,A1
+        SUBR R1,R2
+        JMPN end         # new factor bigger than input
+        JMP begin        # try new factor
+fact    DATA 1           # working variable for current factor
+input   DATA 1729        # place the input here
+negat   OUTC 105
+        OUTC 110
+        OUTC 112
+        OUTC 117
+        OUTC 116
+        OUTC 32
+        OUTC 105
+        OUTC 115
+        OUTC 32
+        OUTC 78
+        OUTC 69
+        OUTC 71
+        OUTC 65
+        OUTC 84
+        OUTC 73
+        OUTC 86
+        OUTC 69
+        OUTC 10
+        HALT
+zero    OUTC 105
+        OUTC 110
+        OUTC 112
+        OUTC 117
+        OUTC 116
+        OUTC 32
+        OUTC 105
+        OUTC 115
+        OUTC 32
+        OUTC 48
+        OUTC 10
+end     OUTC 10
+        HALT
+pr_head OUTC 70
+        OUTC 97
+        OUTC 99
+        OUTC 116
+        OUTC 111
+        OUTC 114
+        OUTC 115
+        OUTC 32
+        OUTC 111
+        OUTC 102
+        OUTC 32
+        OUTR R1
+        OUTC 32
+        OUTC 97
+        OUTC 114
+        OUTC 101
+        OUTC 58
+        OUTC 10
+        JMP begin

@@ -1,0 +1,88 @@
+=========================Testing=========================
+- 	First type of testing is done through error checks within the program.
+	This is really useful for making sure that memory is allocated and no
+	null pointers are being passed around.
+
+-	Second type of testing is done visually. When an .svm is assembled,
+	text is output to stderr printing details of all the structures and what is
+	contained in them.
+
+	The parsed input source file is also printed out to make it easy for checking
+	if the tokenizing is working properly and grabbing the right parts of the line.
+
+	A visual check is really just a nice way to visualize how everthing is stored
+	in your program, and can be used to catch and glaring errors.
+
+-	Third type of testing is simply and md5 sum check. My output binaries should
+	be exactly the same as the binaries output by the provided assignment assembler.
+	If they are different in anyway, then there is a problem with my output.
+	MD5 check allows for a quick check to confirm if my files are good, and
+	almost prevents the need to actually run the program to see if it works.
+
+- 	Fourth type of testing is to run my output binaries in the virtual machine.
+	However, this doesn't guarentee 100% working since one program may work, and
+	another may not. Thus, one should do an MD5 check first.
+
+
+
+
+=========================Results=========================
+
+MD5 checksums:
+
+Test1:
+	efe50c802fe10225592946b1b2663fd3 //My assembler output
+	efe50c802fe10225592946b1b2663fd3 //Provided assembler output
+
+factors:
+	60501fd4ef3cbffd83208d3dc2e85c74 //My assembler output
+	60501fd4ef3cbffd83208d3dc2e85c74 //Provided assembler output
+
+pfactors:
+	825ba871c8d2bd03b3fb476a50f89508 //My assembler output
+	825ba871c8d2bd03b3fb476a50f89508 //Provided assembler output
+
+
+What is MD5?
+
+The md5 utility takes as input a message of arbitrary length and produces as
+output a ``fingerprint'' or ``message digest'' of the input.  It is conjectured
+that it is computationally infeasible to produce two messages having the same
+message digest, or to produce any message having a given prespecified target
+message digest.
+
+	Source: md5 manpage
+
+Because it is computationally infeasable to calculate two different files that have
+the same md5 signiture, and that my assembler output does output a file with the
+same md5 signiture as the provided assembler, then it is safe to say that my
+assembler follows the specifications exactly to produce an exact byte per byte
+copy of what the provided assembler produces.
+
+
+Binary Execution:
+
+Test1:
+	4+3=7 //My assembled binary output
+	4+3=7 //Provided assembler binary output
+
+factors:
+	//My assembled binary output
+	Factors of 1729 are:
+	1 7 13 19 91 133 247 1729
+
+	//Provided assembler binary output
+	Factors of 1729 are:
+	1 7 13 19 91 133 247 1729
+
+pfactors:
+	//My assembled binary output
+	Prime factors of 1729 are:
+	7 13 19
+
+	//Provided assembler binary output
+	Prime factors of 1729 are:
+	7 13 19
+
+
+All visual output matches.

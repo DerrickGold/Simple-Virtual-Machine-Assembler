@@ -1,0 +1,153 @@
+========================List of Structures========================
+includes/assembler.h
+-Assembler_t
+
+includes/btree.h
+-BTreeNode_t
+-BTree_t
+
+includes/fileBuf.h
+-PrgmLine_t
+-PrgmFile_t
+
+includes/keyvalue.h
+-KeyValue_t
+
+includes/myString.h
+-String_t
+
+
+
+========================String_t========================
+
+	typedef struct String_t {
+		char *buf;
+		int len;
+	}String_t;
+
+String_t is a simple structure for dynamically creating and storing strings.
+The methods provided in includes/myString.h allow for easy creation and
+deletion without mucking around with how it works throughout the program.
+
+It ensures that string creation and deletion are consistent throughout the
+program by providing a module to perform such acts.
+
+
+
+========================KeyValue_t========================
+	typedef struct {
+	    char *key;
+	    int value;
+	}KeyValue_t;
+
+KeyValue_t is a structure that associates an integer value with a string name.
+This allows for one to easily store such association in a much larger structure,
+where it can be searched for via name.
+
+The methods provided in include/keyvalue.h allow for easy creation, destruction
+and access of the data within to ensure a consistant interaction with the data.
+
+
+========================BTreeNode_t========================
+	typedef struct _BTreeNode {
+		void *data;
+
+		struct _BTreeNode *left;
+		struct _BTreeNode *right;
+	} BTreeNode_t;
+
+BTreeNode_t is a structure for a node used within a binary tree structure.
+The void data pointer allows for one to store any type of data within the
+tree.
+
+The methods provided in includes/btree.h enables one to create a BTreeNode_t
+object with whatever data they wish to pack in it. There are also methods for
+retrieving the data, and destroying the node.
+
+
+========================BTree_t========================
+	typedef struct {
+		BTreeNode_t *head;
+		int size;
+
+		BTreeNode_rmNodeData rmNodeData;
+		BTreeNode_comparator nodeCompare;
+	}BTree_t;
+
+The BTree_t structure just contains a pointer to the head node, and function
+pointers to functions that are used for interacting with the data packed in each
+node.
+
+By providing functions into the BTree_t, one can reuse the BTree_t structure
+for any data type as long as they provide the functions that define how to
+compare each node to each other:
+
+	BTreeNode_comparator, defined as:
+		typedef int (*BTreeNode_comparator)(const BTreeNode_t *, const BTreeNode_t *);
+
+and  how to clean up the data stored in each BTreeNode_t structure:
+
+	BTreeNode_rmNodeData, defined as:
+		typedef void (*BTreeNode_rmNodeData)(void *);
+
+
+====Binary Tree and the Assembler===
+
+A binary tree was picked as the main data structure for the assembler because:
+	1) it stores things in order, so retrieving data is faster than O(n)
+	2) expanding the tree is simply inserting a new node, rather than expanding
+		a hash and rebuilding it.
+	3) Binary trees don't take too many lines of code to write
+
+
+KeyValue_t structs are glued to BTree_t in source/keyvNode.c allowing for a
+seemless interaction for using a Binary tree to retrieve a key value set, while
+also allowing each module to be used independently of each other if so desired.
+
+
+
+========================PrgmLine_t========================
+	typedef struct PrgmLine_t {
+		char argCount;
+		String_t *label,
+			   	 *op,
+			   	 *arg[2];
+	}PrgmLine_t;
+
+PrgmLine_t is a specialized structure specifically for holding a single line of
+the .svm code. As the program is parsed, each token is stored in its respective
+data within the PrgmLine_t allowing for easy access to a known element.
+
+
+========================PrgmFile_t========================
+	typedef struct PrgmFile_t {
+		PrgmLine_t *line;
+		int lineCount;
+	}PrgmFile_t;
+
+PrgmFile_t is a specialized structure for holding a complete .svm file and its
+parsed/tokenized lines in the order it is read in.
+
+It is possible to loop through each line of the source file and grab specific
+elements with this structure, which is ultimately done in assembling the file.
+
+
+========================Assembler_t========================
+	typedef struct Assembler {
+		BTree_t *opCodes,
+				*registers,
+				*labels;
+
+		PrgmFile_t *srcFile;
+
+		FILE 	*output;
+	}Assembler_t;
+
+Assembler_t stores all the necessary data for assembling an input .svm file.
+It allows one to dynamically change the assembler if necessary
+(maybe on input file has different opcodes and register values), and makes it
+easy to pass such data into the functions that require it i.e. the Assembler_assemble
+function.
+
+The methods provided in includes/assemble.h allow for easy creation of such data
+structure, as well as the cleanup of each structure within it, and itself as well.
