@@ -72,7 +72,7 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 
 export LD	:=	$(CC)
 
-.PHONY: all $(BUILD) clean release test
+.PHONY: all $(BUILD) clean test
 
 all: $(BUILD)
 
@@ -110,13 +110,6 @@ $(OUTPUT).bin	:	$(OFILES)
 	@mv $@ $(shell dirname $@)/$(NAME)
 
 endif
-
-
-#-----------------------------------------------------------------------------------
-#Clean and package project directory in tar file
-#-----------------------------------------------------------------------------------
-release: clean
-	tar -zcvf "goldd5_$(NAME).tar.gz" *
 
 
 md5:
